@@ -3,6 +3,7 @@ import mechanize
 import hashlib
 from bs4 import BeautifulSoup
 from datetime import date,timedelta
+import csv
 
 locationTo = "Whanganui / Wanganui"
 locationFrom = "Wellington - Central"
@@ -13,6 +14,14 @@ busIndex = []
 busIndexNum = 0
 oneday = timedelta(1)
 dayCount = 0
+
+f = open("bus.csv", 'w')
+try:
+    writer = csv.writer(f)
+    writer.writerow( ("Index", "Date", "Departure Time", "Arrivel Time", "Price") )
+finally:
+    f.close()
+
 def Format(dateIn):
 	return "%d-%s-%s" % (dateIn.year, str(dateIn.month).zfill(2), str(dateIn.day).zfill(2))
 
@@ -23,9 +32,15 @@ class Bus:
 		self.departure = departs
 		self.arrival = arrives
 		self.price = price
-
+		f = open("bus.csv", 'a')
+		try:
+		    writer = csv.writer(f)
+		    writer.writerow((self.index, self.date, self.departure, self.arrival, self.price))
+		finally:
+		    f.close()
 	def describe(self):
 		print "Index: %d, Date: %s, Departure Time: %s, Arrivel Time: %s, Price: %s" % (self.index, self.date, self.departure, self.arrival, self.price)
+
 
 
 
