@@ -1,29 +1,31 @@
-import re
-import mechanize
-import hashlib
+import re, os.path, mechanize, csv
 from bs4 import BeautifulSoup
 from datetime import date,timedelta
-import csv
+from collections import deque
 
-locationTo = "Whanganui / Wanganui"
-locationFrom = "Wellington - Central"
+startFresh = True
+locationFrom = "Whanganui / Wanganui"
+locationTo = "Wellington - Central"
 travelDateStart = date(2017,9,7)
 travelDateEnd = date(2018,9,7)
+
+filename = "%s - %s.csv" % (locationFrom.replace("/","_"), locationTo.replace("/","_"))
+filenameOfInterest = "%s - %s - CHEAPAF.csv" % (locationFrom.replace("/","_"), locationTo.replace("/","_"))
 
 busIndex = []
 busIndexNum = 0
 oneday = timedelta(1)
 dayCount = 0
 
-f = open("bus.csv", 'w')
-try:
-    writer = csv.writer(f)
-    writer.writerow( ("Index", "Date", "Departure Time", "Arrivel Time", "Price") )
-finally:
-    f.close()
+busOfInterest = []
+
+
 
 def Format(dateIn):
 	return "%d-%s-%s" % (dateIn.year, str(dateIn.month).zfill(2), str(dateIn.day).zfill(2))
+def ParseDate(dateIn):
+	year,month,day = re.split("-", dateIn)
+	return date(int(year),int(month),int(day))
 
 class Bus:
 	def __init__(self,index,date,departs,arrives,price):	
@@ -32,7 +34,7 @@ class Bus:
 		self.departure = departs
 		self.arrival = arrives
 		self.price = price
-		f = open("bus.csv", 'a')
+		f = open(filename, 'a')
 		try:
 		    writer = csv.writer(f)
 		    writer.writerow((self.index, self.date, self.departure, self.arrival, self.price))
@@ -40,9 +42,45 @@ class Bus:
 		    f.close()
 	def describe(self):
 		print "Index: %d, Date: %s, Departure Time: %s, Arrivel Time: %s, Price: %s" % (self.index, self.date, self.departure, self.arrival, self.price)
+	
+	def cost(self):
+		if self.price != "SOLD OUT":
+			return int(self.price.replace("$", ""))
+		else:
+			return 1000
+	def ofInterest(self):
+		f = open(filenameOfInterest, 'a')
+		try:
+		    writer = csv.writer(f)
+		    writer.writerow((self.index, self.date, self.departure, self.arrival, self.price))
+		finally:
+		    f.close()
 
 
 
+if not os.path.isfile(filename) or startFresh:
+	f = open(filename, 'w')
+	try:
+	    writer = csv.writer(f)
+	    writer.writerow( ("Index", "Date", "Departure Time", "Arrivel Time", "Price") )
+	finally:
+	    f.close()
+	f = open(filenameOfInterest, 'w')
+	try:
+	    writer = csv.writer(f)
+	    writer.writerow( ("Index", "Date", "Departure Time", "Arrivel Time", "Price") )
+	finally:
+	    f.close()
+elif not startFresh: 
+	with open(filename, 'r') as f:
+	    try:
+	        lastrow = deque(csv.reader(f), 1)[0]
+	    except IndexError:  # empty file
+	        lastrow = None
+	    travelDateStart = ParseDate(lastrow[1]) + oneday
+else:
+	print "couldn't find file :("
+	quit()
 
 
 url = "http://www.intercity.co.nz"
@@ -77,9 +115,18 @@ while True:
 			
 			departureTime = soup.find('div', id="ResOpt_%d" % i).find("span", class_="Departs").text
 			arrivalTime = soup.find('div', id="ResOpt_%d" % i).find("span", class_="Arrives").text
-			cost = soup.find('div', id="ResOpt_%d" % i).find("span", class_="PriceDef").find("label").text
+
+			try:
+				cost = soup.find('div', id="ResOpt_%d" % i).find("span", class_="PriceDef").find("label").text
+			except Exception:
+				cost = "SOLD OUT"
+
 			busIndex.append(Bus(busIndexNum, searchDate, departureTime, arrivalTime, cost))
 			busIndex[busIndexNum].describe()
+			if busIndex[busIndexNum].cost() < 3:
+				print "Found Cheap Bus"
+				busOfInterest.append(busIndexNum)
+				busIndex[busIndexNum].ofInterest()
 			busIndexNum += 1
 			i+=1
 		else:
