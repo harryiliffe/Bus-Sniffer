@@ -6,7 +6,7 @@ This is a ridiculus peice of code that scans through the intercity (or manabus) 
 It is a work in progress
 Also its not my fault if intercity sues you. lol
 
-##To Do
+## To Do
 
 - Auto Stop after its scanned the alloted time frame
 - Scan multiply routes in one go
