@@ -14,8 +14,8 @@ locationDict = {'Hastings': '218', 'Wairakei': '225', 'Auckland': '191', 'Kaiwak
 travelDateStart = date(2017,10,20)
 travelDateEnd = date(2018,9,7)
 
-filename = "MANA:%s - %s.csv" % (locationFrom.replace("/","_"), locationTo.replace("/","_"))
-filenameOfInterest = "MANA:%s - %s - CHEAPAF.csv" % (locationFrom.replace("/","_"), locationTo.replace("/","_"))
+filename = "csv/MANA:%s - %s.csv" % (locationFrom.replace("/","_"), locationTo.replace("/","_"))
+filenameOfInterest = "csv/MANA:%s - %s - CHEAPAF.csv" % (locationFrom.replace("/","_"), locationTo.replace("/","_"))
 
 startFresh = False
 
