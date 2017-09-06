@@ -4,19 +4,21 @@ from datetime import date,timedelta
 from collections import deque
 
 startFresh = True
-locationFrom = "Whanganui / Wanganui"
-locationTo = "Wellington - Central"
-travelDateStart = date(2017,9,7)
+# locationFrom = "Whanganui / Wanganui"
+locationTo = "Rotorua"
+locationFrom = "Wellington - Central"
+travelDateStart = date(2017,10,20)
+
 travelDateEnd = date(2018,9,7)
 
-filename = "%s - %s.csv" % (locationFrom.replace("/","_"), locationTo.replace("/","_"))
-filenameOfInterest = "%s - %s - CHEAPAF.csv" % (locationFrom.replace("/","_"), locationTo.replace("/","_"))
+filename = "csv/IC:%s - %s.csv" % (locationFrom.replace("/","_"), locationTo.replace("/","_"))
+filenameOfInterest = "csv/IC:%s - %s - CHEAPAF.csv" % (locationFrom.replace("/","_"), locationTo.replace("/","_"))
 
 busIndex = []
 busIndexNum = 0
 oneday = timedelta(1)
 dayCount = 0
-
+days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 busOfInterest = []
 
 
@@ -28,20 +30,22 @@ def ParseDate(dateIn):
 	return date(int(year),int(month),int(day))
 
 class Bus:
-	def __init__(self,index,date,departs,arrives,price):	
+	def __init__(self,index,date,weekday,departs,arrives,price):	
 		self.index = index
 		self.date = date
+		self.weekday = weekday	
 		self.departure = departs
 		self.arrival = arrives
 		self.price = price
+
 		f = open(filename, 'a')
 		try:
 		    writer = csv.writer(f)
-		    writer.writerow((self.index, self.date, self.departure, self.arrival, self.price))
+		    writer.writerow((self.index, self.date, days[self.weekday], self.departure, self.arrival, self.price))
 		finally:
 		    f.close()
 	def describe(self):
-		print "Index: %d, Date: %s, Departure Time: %s, Arrivel Time: %s, Price: %s" % (self.index, self.date, self.departure, self.arrival, self.price)
+		print "Index: %d, Date: %s, Weekday: %s, Departure Time: %s, Arrivel Time: %s, Price: %s" % (self.index, self.date, days[self.weekday], self.departure, self.arrival, self.price)
 	
 	def cost(self):
 		if self.price != "SOLD OUT":
@@ -52,7 +56,7 @@ class Bus:
 		f = open(filenameOfInterest, 'a')
 		try:
 		    writer = csv.writer(f)
-		    writer.writerow((self.index, self.date, self.departure, self.arrival, self.price))
+		    writer.writerow((self.index, self.date, days[self.weekday], self.departure, self.arrival, self.price))
 		finally:
 		    f.close()
 
@@ -62,13 +66,13 @@ if not os.path.isfile(filename) or startFresh:
 	f = open(filename, 'w')
 	try:
 	    writer = csv.writer(f)
-	    writer.writerow( ("Index", "Date", "Departure Time", "Arrivel Time", "Price") )
+	    writer.writerow( ("Index", "Date", "Weekday", "Departure Time", "Arrivel Time", "Price") )
 	finally:
 	    f.close()
 	f = open(filenameOfInterest, 'w')
 	try:
 	    writer = csv.writer(f)
-	    writer.writerow( ("Index", "Date", "Departure Time", "Arrivel Time", "Price") )
+	    writer.writerow( ("Index", "Date", "Weekday", "Departure Time", "Arrivel Time", "Price") )
 	finally:
 	    f.close()
 elif not startFresh: 
@@ -121,7 +125,7 @@ while True:
 			except Exception:
 				cost = "SOLD OUT"
 
-			busIndex.append(Bus(busIndexNum, searchDate, departureTime, arrivalTime, cost))
+			busIndex.append(Bus(busIndexNum, searchDate, searchDate.weekday(), departureTime, arrivalTime, cost))
 			busIndex[busIndexNum].describe()
 			if busIndex[busIndexNum].cost() < 3:
 				print "Found Cheap Bus"
