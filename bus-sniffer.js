@@ -1,0 +1,17 @@
+var xhr = new XMLHttpRequest();
+
+locationTo = "Palmerston North";
+locationFrom = "Wellington - Central";
+
+// const locationDict = {"Hastings": 218, 'Wairakei': '225', 'Auckland': '191', 'Kaiwaka': '310', 'Whitianga': '292', 'Whenuakite': '548', 'Oakleigh': '308', 'Bay View': '704', 'Whangarei - Kamo': '554', 'Tairua': '293', 'Akoranga ( North Shore Auckland )': '553', 'Mangatawhiri': '431', 'Te Pohue': '695', 'Towai': '560', 'Pokeno': '1000163', 'Wellsford': '307', 'Paeroa': '428', 'Whangarei': '309', 'Ngaruawahia': '228', 'Hamilton - Central': '193', 'Ngatea': '429', 'Albany ( North Shore Auckland )': '304', 'Hamilton - Waikato University': '449', 'Manukau ( Auckland )': '192', 'Maramarua': '430', 'Warkworth': '306', 'Bulls': '299', 'Mount Maunganui ( Tauranga )': '291', 'Napier': '220', 'Karapiro': '241', 'Auckland Airport - Int Terminal': '536', 'Taihape': '234', 'Massey University (Palmerston Nth)': '256', 'Tauranga (Central)': '229', 'Matamata': '231', 'Reporoa': '745', 'Hot Water Beach': '551', 'Palmerston North': '240', 'Auckland Airport - Domestic Terminal': '534', 'Kawakawa': '562', 'Paihia - Bay of Islands': '558', 'Clive': '246', 'Rotorua': '194', 'Hikuai': '300', 'Taupo': '224', 'Opua Hill': '631', 'Thames': '294', 'Morrinsville-Tatuanui': '697', 'Waihi': '301', 'Brynderwyn': '311', 'Ruakaka': '313', 'Wellington - Central': '196', 'Bayfair ( Tauranga )': '290', 'Coroglen': '552', 'Morrinsville': '696', 'Hikurangi': '559', 'Tirau': '216', 'Cambridge': '213', 'Te Puke': '284', 'Hahei': '549', 'Mercer': '435', 'Porirua': '245', 'Waipu': '312', 'Te Puna': '425', 'Levin': '243', 'Whitianga - Buffalo Beach Road': '734', 'Katikati': '426', 'Rangiriri': '433', 'Cathedral Cove': '550', 'Kopu': '423', 'Bombay': '215', 'Turangi': '237', 'Tauranga - Bethlehem': '424'}
+const locationDict = {"Oakleigh":308,"Whangarei - Kamo":554,"Waihi":301,"Katikati":426,"Auckland":191,"Kaiwaka":310,"Waipu":312,"Bay View":704,"Hahei":549,"Te Puna":425,"Akoranga ( North Shore Auckland )":553,"Te Pohue":695,"Whitianga":292,"Pokeno":1000163,"Wellsford":307,"Brynderwyn":311,"Ngaruawahia":228,"Hamilton - Central":193,"Ngatea":429,"Albany ( North Shore Auckland )":304,"Hamilton - Waikato University":449,"Levin":243,"Maramarua":430,"Warkworth":306,"Bulls":299,"Mount Maunganui ( Tauranga )":291,"Napier":220,"Karapiro":241,"Wellington - Central":196,"Auckland Airport - Int Terminal":536,"Taihape":234,"Massey University (Palmerston Nth)":256,"Tauranga (Central)":229,"Matamata":231,"Morrinsville":696,"Hot Water Beach":551,"Palmerston North":240,"Auckland Airport - Domestic Terminal":534,"Kawakawa":562,"Reporoa":745,"Clive":246,"Towai":560,"Paihia - Bay of Islands":558,"Rotorua":194,"Hikuai":300,"Thames":294,"Kopu":423,"Morrinsville-Tatuanui":697,"Whenuakite":548,"Paeroa":428,"Ruakaka":313,"Opua Hill":631,"Bayfair ( Tauranga )":290,"Hastings":218,"Tairua":293,"Whangarei":309,"Tirau":216,"Cambridge":213,"Coroglen":552,"Te Puke":284,"Tauranga - Bethlehem":424,"Taupo":224,"Bombay":215,"Porirua":245,"Mangatawhiri":431,"Whitianga - Buffalo Beach Road":734,"Manukau ( Auckland )":192,"Rangiriri":433,"Cathedral Cove":550,"Wairakei":225,"Mercer":435,"Turangi":237,"Hikurangi":559}
+// travelDateStart = date(2017,10,20)
+// travelDateEnd = date(2018,9,7)
+
+
+
+var dateFinderURL = "https://www.manabus.com/api/search/available-dates/?originId="+locationDict[locationFrom]+"&destinationId="+locationDict[locationTo];
+
+console.log(dateFinderURL);
+
+xhr.open(dateFinderURL);

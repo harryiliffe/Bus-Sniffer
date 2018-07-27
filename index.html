@@ -1,0 +1,27 @@
+<html>
+<script src="js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+
+var xhr = new XMLHttpRequest();
+
+locationTo = "Palmerston North";
+locationFrom = "Wellington - Central";
+
+// travelDateStart = date(2017,10,20)
+// travelDateEnd = date(2018,9,7)
+
+
+
+var dateFinderURL = "https://www.intercity.co.nz"
+
+console.log(dateFinderURL);
+
+$.get("www.intercity.co.nz");
+
+xhr.open("GET",dateFinderURL);
+xhr.send();
+console.log(xhr.responseText);
+
+</script>
+
+</html>
